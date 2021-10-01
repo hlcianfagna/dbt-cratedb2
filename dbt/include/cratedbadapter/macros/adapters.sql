@@ -69,7 +69,7 @@
 {% endmacro %}
 
 {% macro cratedbadapter__create_view_as(relation, sql) -%}
-  create view {{ relation }} as
+  create table {{ relation }} as
     {{ sql }}
   ;
 {% endmacro %}
