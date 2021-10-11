@@ -1,9 +1,5 @@
 {% macro cratedbadapter__create_table_as(temporary, relation, sql) -%}
-  create {% if temporary -%}
-    temporary
-  {%- elif unlogged -%}
-    unlogged
-  {%- endif %} table {{ relation }}
+  create table {{ relation }}
   as (
     {{ sql }}
   );

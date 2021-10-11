@@ -7,5 +7,4 @@ default:
       # host: <host>
       # port: <port_num>
       # username: <user>
-      # password: <pass>
   target: dev
