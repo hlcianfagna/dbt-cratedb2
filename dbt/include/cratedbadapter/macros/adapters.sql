@@ -64,6 +64,13 @@
   {%- endcall -%}
 {% endmacro %}
 
+{% macro dbt_macro__create_schema(relation) -%}
+  {%- call statement('create_schema') -%}
+    commit
+  {%- endcall -%}
+{% endmacro %}
+
+
 {% macro cratedbadapter__create_view_as(relation, sql) -%}
   create table {{ relation }} as
     {{ sql }}

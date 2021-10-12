@@ -41,7 +41,7 @@ def _dbt_psycopg2_name():
 
 
 package_name = "dbt-cratedb"
-package_version = "0.20.1a10"
+package_version = "0.20.1a11"
 description = """The crate adpter plugin for dbt (data build tool)"""
 dbt_version = '0.20.0'
 
