@@ -7,7 +7,7 @@
 
 {% macro cratedbadapter__check_schema_exists(information_schema, schema) -%}
   {% call statement('check_schema_exists', fetch_result=True, auto_begin=False) %}
-    select 1
+    select count(*) from pg_catalog.pg_namespace where nspname = '{{ schema }}'
   {% endcall %}
   {{ return(load_result('check_schema_exists').table) }}
 {% endmacro %}
