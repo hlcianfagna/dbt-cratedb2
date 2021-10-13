@@ -1,10 +1,11 @@
-{% macro check_relation_exists(relation) %}
+{% macro cratedbadapter__check_relation_exists(relation) %}
     select count(*) from "information_schema"."tables" where table_name='{{ relation.identifier }}' and table_schema='{{ relation.schema }}';
 {% endmacro %}
 
 {% macro cratedbadapter__create_table_as(temporary, relation, sql) -%}
   {%- set relation_exists = check_relation_exists(relation=relation) %}
-  {% if relation_exists = 0 %}
+  {{ relation_exists|pprint }}
+  {% if relation_exists %}
     create table {{ relation }}
       as (
         {{ sql }}
