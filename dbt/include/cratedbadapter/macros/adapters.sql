@@ -1,6 +1,7 @@
+
 {% macro create_table_as(temporary, relation, sql) -%}
   {%- call statement('check_relation_exists', fetch_result=True) -%}
-      select * from "information_schema"."tables" where table_name='{{ relation.identifier }}' and table_schema='{{ relation.schema }}';
+    select * from "information_schema"."tables" where table_name='{{ relation.identifier }}' and table_schema='{{ relation.schema }}';
   {% endcall %}
   {% set relation_exists = load_result('check_relation_exists').table %}
   {% if relation_exists %}
