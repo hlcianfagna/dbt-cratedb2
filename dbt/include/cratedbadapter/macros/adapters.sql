@@ -1,13 +1,9 @@
-{% macro cratedbadapter__check_relation_exists(relation) -%}
-  {% call statement('check_relation_exists', fetch_result=True, auto_begin=False) %}
-    select * from "information_schema"."tables" where table_name='{{ relation.identifier }}' and table_schema='{{ relation.schema }}';
-  {% endcall %}
-  {{ return(load_result('check_relation_exists').table) }}
-{% endmacro %}
-
 {% macro cratedbadapter__create_table_as(temporary, relation, sql) -%}
-  {%- set relation_exists = check_relation_exists(relation=relation) %}
-  {{ relation_exists|pprint }}
+  {%- call statement('check_relation_exists', fetch_result=True) -%}
+      select * from "information_schema"."tables" where table_name='{{ relation.identifier }}' and table_schema='{{ relation.schema }}';
+  {%- endcall -%}
+
+  {% set relation_exists = load_result('check_relation_exists').table %}
   {% if relation_exists %}
     create table {{ relation }}
       as (
