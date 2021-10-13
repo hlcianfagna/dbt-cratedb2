@@ -2,7 +2,6 @@
   {%- call statement('check_relation_exists', fetch_result=True) -%}
       select * from "information_schema"."tables" where table_name='{{ relation.identifier }}' and table_schema='{{ relation.schema }}';
   {%- endcall -%}
-
   {% set relation_exists = load_result('check_relation_exists').table %}
   {% if relation_exists %}
     create table {{ relation }}
@@ -13,9 +12,11 @@
 {%- endmacro %}
 
 {% macro cratedbadapter__check_schema_exists(information_schema, schema) -%}
-  {% call statement('check_schema_exists', fetch_result=True, auto_begin=False) %}
-    select 1
+
+  % call statement('check_schema_exists', fetch_result=True, auto_begin=False) %}
+    select count(*) from "information_schema"."tables" where table_schema='{{schema }}';
   {% endcall %}
+  {{ return(load_result('check_schema_exists').table) }}
   {{ return(load_result('check_schema_exists').table) }}
 {% endmacro %}
 
