@@ -3,13 +3,20 @@
 {% endmacro %}
 
 {% macro cratedbadapter__create_table_as(temporary, relation, sql) -%}
-  {%- set relation_exists = adapter.check_relation_exists(relation=relation) %}
-  {% if relation_exists %}
+  {%- set relation_exists = check_relation_exists(relation=relation) %}
+  {% if relation_exists = 0 %}
     create table {{ relation }}
       as (
         {{ sql }}
       );
   {% endif %}
+{%- endmacro %}
+
+{% macro cratedbadapter__create_table_as(temporary, relation, sql) -%}
+  create table {{ relation }}
+  as (
+    {{ sql }}
+  );
 {%- endmacro %}
 
 {% macro cratedbadapter__check_schema_exists(information_schema, schema) -%}
