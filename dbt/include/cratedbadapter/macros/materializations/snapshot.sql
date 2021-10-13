@@ -1,3 +1,5 @@
+
+
 {% macro cratedbadapter__build_snapshot_table(strategy, sql) %}
 
     select *,
