@@ -1,20 +1,26 @@
+{% macro cratedbadapter__create_table_as(temporary, relation, sql) -%}
 
-{% macro create_table_as(temporary, relation, sql) -%}
-  {%- call statement('check_relation_exists', fetch_result=True) -%}
-    select * from "information_schema"."tables" where table_name='{{ relation.identifier }}' and table_schema='{{ relation.schema }}';
-  {% endcall %}
-  {% set relation_exists = load_result('check_relation_exists').table %}
+  {%- set relation_exists = adapter.check_relation_exists(relation=relation.schema) %}
   {% if relation_exists %}
     create table {{ relation }}
       as (
         {{ sql }}
       );
   {% endif %}
+
+
+{%- endmacro %}
+
+{% macro cratedbadapter__create_table_as(temporary, relation, sql) -%}
+  create table {{ relation }}
+  as (
+    {{ sql }}
+  );
 {%- endmacro %}
 
 {% macro cratedbadapter__check_schema_exists(information_schema, schema) -%}
-  % call statement('check_schema_exists', fetch_result=True, auto_begin=False) %}
-    select count(*) from "information_schema"."tables" where table_schema='{{schema }}';
+  {% call statement('check_schema_exists', fetch_result=True, auto_begin=False) %}
+    select 1
   {% endcall %}
   {{ return(load_result('check_schema_exists').table) }}
 {% endmacro %}
