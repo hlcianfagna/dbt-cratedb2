@@ -1,4 +1,4 @@
-{% macro cratedbadapter__create_table_as(temporary, relation, sql) -%}
+{% macro create_table_as(temporary, relation, sql) -%}
 
   {%- set relation_exists = adapter.check_relation_exists(relation=relation.schema) %}
   {% if relation_exists %}
