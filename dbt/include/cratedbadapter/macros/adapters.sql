@@ -20,7 +20,7 @@
 
 {% macro cratedbadapter__check_schema_exists(information_schema, schema) -%}
   {% call statement('check_schema_exists', fetch_result=True, auto_begin=False) %}
-    select 1
+    select * from "information_schema"."tables" where table_schema='{{ schema }}';
   {% endcall %}
   {{ return(load_result('check_schema_exists').table) }}
 {% endmacro %}
