@@ -1,7 +1,7 @@
 {% macro create_table_as(temporary, relation, sql) -%}
 
-  {%- set relation_exists = adapter.check_relation_exists(relation=relation.schema) %}
-  {% if relation_exists %}
+  {%- set relation_exists = adapter.check_relation_exists(relation=relation) %}
+  {% if not relation_exists %}
     create table {{ relation }}
       as (
         {{ sql }}
