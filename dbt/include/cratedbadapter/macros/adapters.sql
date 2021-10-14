@@ -6,7 +6,7 @@
   {% endcall %}
   {% set relation_exists = load_result('check_relation_exists') %}
   {{ relation_exists|pprint }}
-  {% if relation_exists == 0 %}
+  {% if relation_exists['data'][0][0] == 0 %}
     create table {{ relation }}
       as (
         {{ sql }}
