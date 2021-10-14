@@ -10,8 +10,6 @@
       as (
         {{ sql }}
       );
-  {% else %}
-    commit;
   {% endif %}
 
 {%- endmacro %}
