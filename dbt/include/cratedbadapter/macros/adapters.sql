@@ -5,7 +5,6 @@
     select count(*) from "information_schema"."tables" where table_name='{{ relation.identifier }}' and table_schema='{{ relation.schema }}';
   {% endcall %}
   {% set relation_exists = load_result('check_relation_exists') %}
-  {{ relation_exists['data'][0][0]|pprint }}
   {% if relation_exists['data'][0][0] == 0 %}
     create table {{ relation }}
       as (
