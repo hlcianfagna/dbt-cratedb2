@@ -1,26 +1,25 @@
-{% macro create_table_as(temporary, relation, sql) -%}
 
-  {%- set relation_exists = adapter.check_relation_exists(relation=relation) %}
+{% macro cratedbadapter__create_table_as(temporary, relation, sql) -%}
+
+  {%- call statement('check_relation_exists', fetch_result=True) -%}
+    select * from "information_schema"."tables" where table_name='{{ relation.identifier }}' and table_schema='{{ relation.schema }}';
+  {% endcall %}
+  {% set relation_exists = load_result('check_relation_exists') %}
+  {{ relation_exists|pprint }}
   {% if not relation_exists %}
     create table {{ relation }}
       as (
         {{ sql }}
       );
+  {% else %}
+    commit;
   {% endif %}
 
-
-{%- endmacro %}
-
-{% macro cratedbadapter__create_table_as(temporary, relation, sql) -%}
-  create table {{ relation }}
-  as (
-    {{ sql }}
-  );
 {%- endmacro %}
 
 {% macro cratedbadapter__check_schema_exists(information_schema, schema) -%}
   {% call statement('check_schema_exists', fetch_result=True, auto_begin=False) %}
-    select count(*) from "information_schema"."tables" where table_schema='{{ schema }}';
+    select 1;
   {% endcall %}
   {{ return(load_result('check_schema_exists').table) }}
 {% endmacro %}
@@ -71,24 +70,12 @@
   now()
 {%- endmacro %}
 
-{% macro cratedbadapter__create_schema(relation) -%}
-  {%- call statement('create_schema') -%}
-    commit
-  {%- endcall -%}
-{% endmacro %}
-
-{% macro dbt_macro__create_schema(relation) -%}
-  {%- call statement('create_schema') -%}
-    commit
-  {%- endcall -%}
-{% endmacro %}
-
 
 {% macro cratedbadapter__create_view_as(relation, sql) -%}
   create table {{ relation }} as
-    {{ sql }}
-  ;
+    {{ sql }};
 {% endmacro %}
+
 
 {% macro cratedbadapter__rename_relation(from_relation, to_relation) -%}
   {% call statement('rename_relation') -%}
@@ -96,3 +83,14 @@
   {%- endcall %}
 {% endmacro %}
 
+{% macro cratedbadapter__create_schema(relation) -%}
+  {%- call statement('create_schema') -%}
+    commit;
+  {%- endcall -%}
+{% endmacro %}
+
+{% macro dbt_macro__create_schema(relation) -%}
+  {%- call statement('create_schema') -%}
+    commit;
+  {%- endcall -%}
+{% endmacro %}

@@ -6,7 +6,6 @@
         {{ strategy.scd_id }} as dbt_scd_id,
         {{ strategy.updated_at }} as dbt_updated_at,
         {{ strategy.updated_at }} as dbt_valid_from,
-        1 as test,
         nullif({{ strategy.updated_at }}, {{ strategy.updated_at }}) as dbt_valid_to
     from (
         {{ sql }}
@@ -19,7 +18,6 @@
         {{ strategy.scd_id }} as dbt_scd_id,
         {{ strategy.updated_at }} as dbt_updated_at,
         {{ strategy.updated_at }} as dbt_valid_from,
-        1 as test,
         nullif({{ strategy.updated_at }}, {{ strategy.updated_at }}) as dbt_valid_to
     from (
         {{ sql }}
