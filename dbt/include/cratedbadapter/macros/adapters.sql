@@ -17,6 +17,10 @@
 {%- endmacro %}
 
 {% macro cratedbadapter__check_schema_exists(information_schema, schema) -%}
+  {#
+    On CrateDB, schemas are created implicitly according to the name used.
+    If a schema does not exist, CrateDB create it automatically.
+  #}
   {% call statement('check_schema_exists', fetch_result=True, auto_begin=False) %}
     select 1;
   {% endcall %}
