@@ -47,6 +47,7 @@ class CratedbAdapterConnectionManager(SQLConnectionManager):
         connection = self.get_thread_connection()
         sql=sql.replace('"".','')
         sql = sql.replace(' cascade', '')
+        sql = sql.replace(' limit 100;', '')
         print("...")
         print(sql)
         print("...")
