@@ -51,10 +51,11 @@
           upper(sch.nspname) = upper('{{ schema }}'){%- if not loop.last %} or {% endif -%}
         {%- endfor -%}
       )
-      and tbl.relpersistence = 'p' -- [p]ermanent table. Other values are [u]nlogged table, [t]emporary table
-      and tbl.relkind in ('r', 'v', 'f', 'p') -- o[r]dinary table, [v]iew, [f]oreign table, [p]artitioned table. Other values are [i]ndex, [S]equence, [c]omposite type, [t]OAST table, [m]aterialized view
-      and col.attnum > 0 -- negative numbers are used for system columns such as oid
-      and not col.attisdropped order by sch.nspname, tbl.relname, col.attnum
+      and tbl.relpersistence = 'p'
+      and tbl.relkind in ('r', 'v', 'f', 'p')
+      and col.attnum > 0
+      and not col.attisdropped
+      order by sch.nspname, tbl.relname, col.attnum
 
   {%- endcall -%}
 
