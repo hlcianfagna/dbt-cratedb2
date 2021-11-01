@@ -48,9 +48,9 @@ class CratedbAdapterConnectionManager(SQLConnectionManager):
         sql=sql.replace('"".','')
         sql = sql.replace(' cascade', '')
         sql = sql.replace(' limit 100;', '')
-        #print("...")
-        #print(sql)
-        #print("...")
+        print("...")
+        print(sql)
+        print("...")
         if auto_begin and connection.transaction_open is False:
             self.begin()
 
