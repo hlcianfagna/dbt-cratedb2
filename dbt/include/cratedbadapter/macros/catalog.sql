@@ -56,11 +56,6 @@
       and col.attnum > 0 -- negative numbers are used for system columns such as oid
       and not col.attisdropped -- column as not been dropped
 
-    order by
-        sch.nspname,
-        tbl.relname,
-        col.attnum
-
   {%- endcall -%}
 
   {{ return(load_result('catalog').table) }}
