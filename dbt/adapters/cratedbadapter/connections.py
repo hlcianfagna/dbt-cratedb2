@@ -40,7 +40,7 @@ class CratedbAdapterConnectionManager(SQLConnectionManager):
     def add_query(
         self,
         sql: str,
-        auto_begin: bool = True,
+        auto_begin: bool = False,
         bindings: Optional[Any] = None,
         abridge_sql_log: bool = False
     ) -> Tuple[Connection, Any]:
