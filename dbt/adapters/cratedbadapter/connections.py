@@ -22,7 +22,12 @@ class CratedbAdapterCredentials(Credentials):
     host: str
     user: str
     port: Port
-    #password: str  # on postgres the password is mandatory
+    password: str  # on postgres the password is mandatory
+
+    _ALIASES = {
+        'dbname': 'database',
+        'pass': 'password'
+    }
 
     @property
     def type(self):
@@ -93,7 +98,7 @@ class CratedbAdapterConnectionManager(SQLConnectionManager):
                 dbname="",
                 user=credentials.user,
                 host=credentials.host,
-                password="",
+                password=credentials.password,
                 port=credentials.port,
                 connect_timeout=10)
             connection.handle = handle
