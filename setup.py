@@ -25,7 +25,7 @@ setup(
         ]
     },
     install_requires=[
-        'dbt-core==0.20.0',
+        'dbt-core==0.21.0',
         'psycopg2-binary~=2.8',
     ],
     zip_safe=False,
