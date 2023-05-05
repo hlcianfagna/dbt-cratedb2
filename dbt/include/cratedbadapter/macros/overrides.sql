@@ -1,6 +1,8 @@
 {% macro postgres__create_schema(relation) -%}
   {%- call statement('create_schema') -%}
     /* schemas are not created in CrateDB */
+    DROP TABLE IF EXISTS thisschemadefinitelydoesnotexits.thiswouldnotexist
+    /* but we need to run something to not have just EOF */
   {% endcall %}
 {% endmacro %}
 
