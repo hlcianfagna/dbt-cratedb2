@@ -1,3 +1,9 @@
+{% macro postgres__create_schema(relation) -%}
+  {%- call statement('create_schema') -%}
+    /* schemas are not created in CrateDB */
+  {% endcall %}
+{% endmacro %}
+
 {% macro postgres__create_table_as(temporary, relation, sql) -%}
   {%- set unlogged = config.get('unlogged', default=false) -%}
   {%- set sql_header = config.get('sql_header', none) -%}
