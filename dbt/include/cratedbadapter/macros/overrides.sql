@@ -6,7 +6,7 @@
 
   create  table {{ relation }}
   as (
-    {{ sql }}
+    {{ sql|replace('"crate".', "") }}
   );
 {%- endmacro %}
 
@@ -36,6 +36,13 @@
 
   {{ sql_header if sql_header is not none }}
   create view {{ relation }} as 
-    {{ sql }}
+    {{ sql|replace('"crate".', "") }}
   ;
 {%- endmacro %}
+
+{% macro postgres__rename_relation(from_relation, to_relation) -%}
+  {% call statement('rename_relation') -%}
+        create or replace view {{ to_relation.name|replace('"crate".', "") }} as 
+        select * from {{ from_relation|replace('"crate".', "") }}
+  {%- endcall %}
+{% endmacro %}
