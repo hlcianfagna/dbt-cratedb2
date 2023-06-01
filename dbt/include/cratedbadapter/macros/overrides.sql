@@ -64,20 +64,40 @@
 {%- endmacro %}
 
 {% macro postgres__rename_relation(from_relation, to_relation) -%}
-  {% do drop_relation(to_relation) %}
-  {% set relation_type = run_query("select table_type from information_schema.tables where table_schema = '{{ from_relation.schema }}' and table_name = '{{ from_relation.identifier }}'") %}
-  {% if relation_type == 'VIEW' %}    
-    {% set view_definition = run_query("SELECT view_definition FROM information_schema.views WHERE table_schema = '{{ from_relation.schema }}' AND table_name = '{{ from_relation.identifier }}'") %}
-	{% call statement('drop_view') -%}
-      DROP VIEW IF EXISTS {{ to_relation.schema }}.{{ to_relation.identifier }};
-    {%- endcall %}
-    {% call statement('create_view') -%}
-      CREATE VIEW {{ to_relation.schema }}.{{ to_relation.identifier }} AS {{ view_definition }}
-    {%- endcall %}
-  {% else %}
-    {% call statement('rename_table') -%}
-      ALTER TABLE {{ from_relation.schema }}.{{ from_relation.identifier }}
-      RENAME TO {{ to_relation.schema }}.{{ to_relation.identifier }}
-    {%- endcall %}
-  {% endif %}
+	{% do drop_relation(to_relation) %}
+	{% set schema_query = "SELECT table_type FROM information_schema.tables WHERE table_schema = '{}' AND table_name = '{}'".format(from_relation.schema, from_relation.identifier) %}
+	{% set results = run_query(schema_query) %}
+	{% if execute %}
+		{% set results_list = results.columns[0].values() %}
+	{% else %}
+		{% set results_list = [] %}
+	{% endif %}
+	{% for relation_type in results_list %}  
+		{% if relation_type == 'VIEW' %}    
+			{% set view_query = "SELECT view_definition FROM information_schema.views WHERE table_schema = '{}' AND table_name = '{}'".format(from_relation.schema, from_relation.identifier) %}
+			{% set view_definitions = run_query(view_query) %}
+			{% if execute %}
+				{% set view_definitions_list = view_definitions.columns[0].values() %}
+			{% else %}
+				{% set view_definitions_list = [] %}
+			{% endif %}
+			{% for view_definition in view_definitions_list %}  				
+				{% call statement('drop_view') -%}
+					DROP VIEW IF EXISTS {{ to_relation.schema }}.{{ to_relation.identifier }};
+				{%- endcall %}
+				{% call statement('create_view') -%}
+					CREATE VIEW {{ to_relation.schema }}.{{ to_relation.identifier }} AS {{ view_definition }}
+				{%- endcall %}
+				{% call statement('drop_view') -%}
+					DROP VIEW IF EXISTS {{ from_relation.schema }}.{{ from_relation.identifier }};
+				{%- endcall %}
+			{% endfor %}
+		{% else %}
+			{% call statement('rename_table') -%}
+				ALTER TABLE {{ from_relation.schema }}.{{ from_relation.identifier }}
+					RENAME TO {{ to_relation.identifier }}
+			{%- endcall %}
+		{% endif %}
+	{% endfor %}
 {% endmacro %}
+
