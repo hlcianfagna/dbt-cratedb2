@@ -26,3 +26,9 @@
   {% endcall %}
   {{ return(load_result('list_relations_without_caching').table) }}
 {% endmacro %}
+
+{% macro default__truncate_relation(relation) -%}
+  {% call statement('truncate_relation') -%}
+    delete from  {{ relation }}
+  {%- endcall %}
+{% endmacro %}
