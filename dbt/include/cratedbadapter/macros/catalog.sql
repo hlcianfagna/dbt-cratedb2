@@ -3,8 +3,7 @@
 
   {%- call statement('catalog', fetch_result=True) -%}
     {#
-      If the user has multiple databases set and the first one is wrong, this will fail.
-      But we won't fail in the case where there are multiple quoting-difference-only dbs, which is better.
+      Derived from https://github.com/dbt-labs/dbt-core/blob/main/plugins/postgres/dbt/include/postgres/macros/catalog.sql
     #}
     {% set database = information_schema.database %}
     {{ adapter.verify_database(database) }}
